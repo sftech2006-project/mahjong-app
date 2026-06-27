@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>麻雀成績管理 Ver 2.1</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="openingOverlay" class="opening-overlay" aria-label="オープニングムービー">
+    <video id="openingVideo" class="opening-video" src="assets/opening.mp4" autoplay muted playsinline preload="auto"></video>
+    <div id="openingTitle" class="opening-title" aria-hidden="true">
+      <div class="opening-title-main">麻雀成績管理</div>
+      <div class="opening-title-sub">～牧ケ谷雀荘編～</div>
+    </div>
+    <button id="skipOpeningButton" class="opening-skip" type="button">スキップ</button>
+  </div>
+
+  <header class="app-header">
+    <div>
+      <h1>麻雀成績管理 <span class="version-badge">Ver 2.1</span></h1>
+      <p id="syncStatus">ローカル保存</p>
+    </div>
+    <button id="adminButton" class="ghost-button" type="button">管理者ログイン</button>
+  </header>
+
+  <main id="content">
+    <section class="screen active" id="homeScreen">
+      <div class="toolbar">
+        <button id="newSessionButton" type="button">新規開催</button>
+        <button id="latestSessionButton" type="button">最新開催を開く</button>
+      </div>
+      <div class="sticky-actions">
+        <button id="homeJumpTopButton" type="button">先頭</button>
+        <input id="homeMonthJump" type="month">
+        <button id="homeJumpLatestButton" type="button">最新</button>
+      </div>
+      <div class="panel">
+        <h2>開催一覧</h2>
+        <div id="sessionList" class="list"></div>
+      </div>
+    </section>
+
+    <section class="screen" id="dailyScreen">
+      <div class="screen-title">
+        <div>
+          <h2>Daily</h2>
+          <div id="dailyMeta" class="daily-meta"></div>
+        </div>
+        <div class="toolbar compact">
+          <button id="sessionPickerButton" type="button">開催選択</button>
+          <button id="finishSessionButton" type="button">対局終了</button>
+        </div>
+      </div>
+
+      <div id="participantPanel" class="panel"></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>金額履歴</h3>
+          <button id="toggleMoneyButton" class="ghost-button" type="button">折りたたみ</button>
+        </div>
+        <div id="moneyBlock" class="table-wrap"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>順位回数</h3>
+        </div>
+        <div id="rankBlock" class="table-wrap"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>素点履歴</h3>
+          <div class="toolbar compact">
+            <button id="autoScoreButton" class="mode-button" type="button">自動入力 ON</button>
+            <button id="addRoundButton" type="button">荘数追加</button>
+          </div>
+        </div>
+        <div id="scoreBlock" class="table-wrap"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>ポイント履歴</h3>
+          <button id="togglePointButton" class="ghost-button" type="button">折りたたみ</button>
+        </div>
+        <div id="pointBlock" class="table-wrap"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>役満入力</h3>
+          <button id="addYakumanButton" type="button">追加</button>
+        </div>
+        <div id="yakumanList" class="list"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>祝儀入力</h3>
+          <button id="addTipButton" type="button">追加</button>
+        </div>
+        <div id="tipList" class="list"></div>
+      </div>
+
+      <div class="panel">
+        <h3>場代・最終収支</h3>
+        <div id="finalBlock" class="table-wrap"></div>
+      </div>
+    </section>
+
+    <section class="screen" id="totalScreen">
+      <div class="sticky-actions">
+        <button id="jumpTopButton" type="button">先頭</button>
+        <input id="monthJump" type="month">
+        <button id="jumpLatestButton" type="button">最新</button>
+      </div>
+      <div class="panel">
+        <h2>開催日推移</h2>
+        <p id="trendAdminNote" class="admin-note" hidden>削除は右端にあります</p>
+        <div id="trendBlock" class="table-wrap"></div>
+      </div>
+      <div class="panel">
+        <h2>個人成績</h2>
+        <div id="personalBlock" class="table-wrap"></div>
+      </div>
+      <div class="panel">
+        <h2>整合チェック</h2>
+        <div id="checkBlock"></div>
+      </div>
+    </section>
+
+    <section class="screen" id="playerScreen">
+      <div class="screen-title">
+        <h2>Player</h2>
+        <button id="addPlayerButton" type="button">プレイヤー追加</button>
+      </div>
+      <div id="playerList" class="panel"></div>
+    </section>
+
+    <section class="screen" id="settingScreen">
+      <div class="screen-title">
+        <h2>Setting</h2>
+        <button id="saveSettingsButton" type="button">設定保存</button>
+      </div>
+      <div id="settingsForm" class="settings-grid"></div>
+      <div class="panel">
+        <h3>バックアップ</h3>
+        <div class="toolbar">
+          <button id="exportJsonButton" type="button">JSON出力</button>
+          <label class="file-button">JSON復元<input id="importJsonInput" type="file" accept="application/json"></label>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="historyScreen">
+      <h2>History</h2>
+      <div id="historyList" class="panel list"></div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button data-screen="homeScreen" type="button">Home</button>
+    <button data-screen="dailyScreen" type="button">Daily</button>
+    <button data-screen="totalScreen" type="button">Total</button>
+    <button data-screen="playerScreen" type="button">Player</button>
+    <button data-screen="settingScreen" type="button">Setting</button>
+    <button data-screen="historyScreen" type="button">History</button>
+  </nav>
+
+  <dialog id="tieDialog">
+    <form method="dialog">
+      <h3>同点順位を選択</h3>
+      <p id="tieMessage"></p>
+      <div id="tieChoices"></div>
+      <div class="toolbar end">
+        <button value="cancel" type="submit">キャンセル</button>
+        <button id="tieApplyButton" value="apply" type="submit">確定</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="entryDialog">
+    <form method="dialog">
+      <h3 id="entryTitle"></h3>
+      <label>対象プレイヤー<select id="entryPlayer"></select></label>
+      <label>金額<input id="entryAmount" type="number" step="100"></label>
+      <label>メモ<input id="entryMemo" type="text"></label>
+      <div class="toolbar end">
+        <button value="cancel" type="submit">キャンセル</button>
+        <button id="entryApplyButton" value="apply" type="submit">追加</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
